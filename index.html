@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PIMMS - Transforme chaque clic en conversion</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            --pimms-blue-dark: #141D57; /* rgb(20, 29, 87) */
+            --pimms-blue-light: #3971FF; /* rgb(57, 113, 255) */
+            --pimms-blue-text: #170B6A; /* rgb(23, 11, 106) */
+            --pimms-blue-grey: #EEF4FF; /* rgb(238, 244, 255) */
+        }
+        /* Couleurs personnalisées pour Tailwind (alternative à la config) */
+        .bg-pimms-blue-dark { background-color: var(--pimms-blue-dark); }
+        .text-pimms-blue-dark { color: var(--pimms-blue-dark); }
+        .bg-pimms-blue-light { background-color: var(--pimms-blue-light); }
+        .text-pimms-blue-light { color: var(--pimms-blue-light); }
+        .text-pimms-blue-text { color: var(--pimms-blue-text); }
+        .bg-pimms-blue-grey { background-color: var(--pimms-blue-grey); }
+        .text-pimms-blue-grey { color: var(--pimms-blue-grey); }
+
+        /* Nouvelle animation: fadeInUp */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px); /* Augmenté pour plus d'effet */
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .animate-fadeInUp {
+            opacity: 0; /* Start hidden */
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+
+        /* Nouvelle animation: Marquee pour les carrousels */
+        .marquee-container {
+            overflow: hidden;
+            width: 100%;
+        }
+        .marquee-content {
+            display: flex;
+            animation: marquee 30s linear infinite; /* Ajustez la durée pour la vitesse */
+        }
+        .marquee-content:hover {
+            animation-play-state: paused; /* Pause au survol */
+        }
+        .marquee-content > * {
+            flex-shrink: 0;
+            white-space: nowrap;
+            margin-right: 1rem; /* Espace entre les éléments */
+        }
+        @keyframes marquee {
+            0% { transform: translateX(0%); }
+            100% { transform: translateX(-50%); } /* Défile de 50% pour donner l'illusion d'infini si le contenu est dupliqué */
+        }
+        /* Pour un effet infini plus propre, dupliquez le contenu des .marquee-content dans le HTML */
+
+
+        /* Styling pour l'accordéon FAQ (très basique) */
+        .faq-item details summary {
+            cursor: pointer;
+            font-weight: 600;
+            list-style: none; /* Hide default marker */
+        }
+        .faq-item details summary::-webkit-details-marker {
+            display: none; /* Hide default marker for Chrome */
+        }
+        .faq-item details[open] summary svg {
+            transform: rotate(0deg);
+        }
+        .faq-item details summary svg {
+             transform: rotate(-45deg);
+             transition: transform 0.2s;
+        }
+    </style>
+</head>
+<body class="bg-white text-gray-800">
+
+    <!-- Hello Bar -->
+    <a href="#pricing" class="flex items-center justify-center p-3 bg-pimms-blue-light text-white text-sm md:text-base hover:opacity-90 transition-opacity">
+        <span class="inline-block bg-white text-pimms-blue-light text-xs font-extrabold px-2 py-1 rounded-full mr-2 md:mr-3">OFFRE LIMITEE</span>
+        <span class="font-bold">PIMMS Pro à 45 € HT</span>
+        <span class="hidden md:inline"> - Tarif de lancement réservé aux 100 premiers utilisateurs</span>
+    </a>
+
+    <!-- Hero Section -->
+    <section class="py-12 md:py-20 px-4 bg-white relative overflow-hidden">
+        <div class="absolute inset-0 opacity-5" style="background-image:url(https://framerusercontent.com/images/wGAHOWhVswEtWkOKTJN6s2CW0.svg); background-repeat:repeat; background-size:26px auto;"></div>
+        <div class="container mx-auto max-w-5xl relative z-10">
+            <header class="mb-10 text-center animate-fadeInUp">
+                <div class="inline-block">
+                    <svg class="h-8 md:h-10" viewBox="0 0 159 30" preserveAspectRatio="xMidYMid meet"><use href="#svg-2104654643_2197"></use></svg>
+                </div>
+            </header>
+
+            <div class="mb-10 md:mb-16 text-center animate-fadeInUp" style="animation-delay: 0.1s;">
+                <div class="flex justify-center items-center space-x-[-10px] mb-3">
+                    <img src="https://framerusercontent.com/images/agYEgxeV2xsHtJ1vkMXFZayKO28.png" alt="User avatar 2" class="w-10 h-10 md:w-12 md:h-12 rounded-full border-2 border-white object-cover shadow-md">
+                    <img src="https://framerusercontent.com/images/OgvL4rB43h76mFksZndFPYzgJY.png" alt="User avatar 3" class="w-10 h-10 md:w-12 md:h-12 rounded-full border-2 border-white object-cover shadow-md">
+                    <img src="https://framerusercontent.com/images/DnhRPY04sktGoWw8APXQuPMqg.png" alt="User avatar 4" class="w-10 h-10 md:w-12 md:h-12 rounded-full border-2 border-white object-cover shadow-md">
+                    <img src="https://framerusercontent.com/images/vVWKkpK9bCtb7rlR5fsbzEDd7I.png" alt="User avatar 5" class="w-10 h-10 md:w-12 md:h-12 rounded-full border-2 border-white object-cover shadow-md">
+                </div>
+                <p class="text-xs font-medium tracking-wider uppercase text-pimms-blue-dark">
+                    Approuvé et utilisé par les créateurs et startups
+                </p>
+            </div>
+
+            <div class="text-center mb-8 md:mb-12 animate-fadeInUp" style="animation-delay: 0.2s;">
+                <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-pimms-blue-text mb-4 md:mb-6 leading-tight">
+                    Transforme chaque clic en<br>
+                    <span class="italic text-pimms-blue-light" style="font-family: 'Georgia', serif;">conversion</span>, puis en <span class="italic text-pimms-blue-light" style="font-family: 'Georgia', serif;">décision</span>
+                </h1>
+                <p class="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto">
+                    La majorité des outils s’arrêtent aux clics. PIMMS va plus loin : tu sais enfin quels liens, contenus et canaux génèrent de vraies conversions.
+                </p>
+            </div>
+
+            <div class="text-center mb-10 md:mb-16 animate-fadeInUp" style="animation-delay: 0.3s;">
+                <a href="#" rel="noopener" class="inline-flex items-center bg-pimms-blue-light text-white font-bold text-base md:text-lg px-8 py-3 rounded-full shadow-lg hover:bg-blue-700 transition-colors duration-300 transform hover:scale-105">
+                    <svg class="w-4 h-4 mr-2" viewBox="0 0 13 16" fill="currentColor"><use href="#svg-426800535_523"></use></svg>
+                    Démarrer gratuitement • 10 liens offerts
+                </a>
+                <p class="mt-3 text-sm text-pimms-blue-dark font-medium">Pas de CB requise • Sans engagement</p>
+            </div>
+
+            <div class="max-w-3xl mx-auto rounded-2xl shadow-2xl overflow-hidden animate-fadeInUp" style="animation-delay: 0.4s;">
+                <div class="relative group">
+                    <video src="https://assets.pimms.io/video-pimms-intro-fr-preview.mp4" loop preload="auto" playsinline autoplay muted class="w-full h-auto block aspect-video object-cover"></video>
+                    <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-20 group-hover:bg-opacity-10 transition-opacity duration-300">
+                        <button aria-label="Play video" class="p-4 bg-pimms-blue-light text-white rounded-full shadow-lg opacity-80 group-hover:opacity-100 transform group-hover:scale-110 transition-all duration-300">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M6.90588 4.53682C6.50592 4.2998 6 4.58808 6 5.05299V18.947C6 19.4119 6.50592 19.7002 6.90588 19.4632L18.629 12.5162C19.0211 12.2838 19.0211 11.7162 18.629 11.4838L6.90588 4.53682Z"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Problem Section -->
+    <section class="py-12 md:py-20 px-4 bg-pimms-blue-grey">
+        <div class="container mx-auto max-w-5xl">
+            <div class="text-center mb-10 md:mb-16 animate-fadeInUp">
+                <span class="inline-block bg-pimms-blue-dark text-white text-xs font-bold tracking-widest uppercase px-3 py-1.5 rounded-lg mb-4">
+                    Le PROBLÈME
+                </span>
+                <h2 class="text-3xl md:text-4xl font-bold text-pimms-blue-text mb-3">
+                    Sans PIMMS, tu perds des <span class="italic text-pimms-blue-light" style="font-family: 'Georgia', serif;">conversions</span>
+                </h2>
+                <p class="text-lg text-gray-700 max-w-xl mx-auto">
+                    Tes liens s’ouvrent dans un navigateur intégré. Tu ne sais pas ce qui convertit ni ce qui fonctionne.
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8 mb-12">
+                <div class="bg-white p-6 md:p-8 rounded-xl shadow-lg animate-fadeInUp" style="animation-delay: 0.1s;">
+                    <h3 class="text-xl md:text-2xl font-semibold text-pimms-blue-text mb-4">Ton expérience utilisateur est cassée</h3>
+                    <ul class="space-y-3 text-gray-700">
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-red-500 mr-3 mt-1 flex-shrink-0" viewBox="0 0 16 17" fill="currentColor"><use href="#svg-1342049371_712"></use></svg>
+                            <span><strong class="text-pimms-blue-dark">Les liens s’ouvrent dans un mini-navigateur intégré</strong>, pas dans l’app officielle.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-red-500 mr-3 mt-1 flex-shrink-0" viewBox="0 0 16 17" fill="currentColor"><use href="#svg-1342049371_712"></use></svg>
+                            <span><strong class="text-pimms-blue-dark">Les utilisateurs sont déconnectés</strong> (profils sociaux, paiements échoués...).</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-red-500 mr-3 mt-1 flex-shrink-0" viewBox="0 0 16 17" fill="currentColor"><use href="#svg-1342049371_712"></use></svg>
+                            <span><strong class="text-pimms-blue-dark">Leur expérience est lente et ils abandonnent</strong> avant même de voir ta page.</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="bg-white p-6 md:p-8 rounded-xl shadow-lg animate-fadeInUp" style="animation-delay: 0.2s;">
+                    <h3 class="text-xl md:text-2xl font-semibold text-pimms-blue-text mb-4">Tu publies à l’aveugle</h3>
+                    <ul class="space-y-3 text-gray-700">
+                        <li class="flex items-start">
+                             <svg class="w-5 h-5 text-red-500 mr-3 mt-1 flex-shrink-0" viewBox="0 0 16 17" fill="currentColor"><use href="#svg-1342049371_712"></use></svg>
+                            <span>La plupart des outils <strong class="text-pimms-blue-dark">suivent les clics, mais pas les conversions réelles.</strong></span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-red-500 mr-3 mt-1 flex-shrink-0" viewBox="0 0 16 17" fill="currentColor"><use href="#svg-1342049371_712"></use></svg>
+                            <span><strong class="text-pimms-blue-dark">Tu ne sais pas ce qui génère des leads,</strong> des ventes ou des abonnements.</span>
+                        </li>
+                        <li class="flex items-start">
+                             <svg class="w-5 h-5 text-red-500 mr-3 mt-1 flex-shrink-0" viewBox="0 0 16 17" fill="currentColor"><use href="#svg-1342049371_712"></use></svg>
+                            <span><strong class="text-pimms-blue-dark">Tu continues à perdre du temps…</strong> sans savoir ce qui fonctionne.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="bg-pimms-blue-dark text-white p-8 md:p-10 rounded-2xl shadow-xl text-center relative overflow-hidden animate-fadeInUp" style="animation-delay: 0.3s;">
+                 <svg class="absolute -top-20 -right-20 w-64 h-64 opacity-10" viewBox="0 0 728 728" fill="currentColor" ><use href="#svg1427202011_989"></use></svg>
+                <h3 class="text-2xl md:text-3xl font-bold mb-3 relative z-10">Bref, tu as compris...</h3>
+                <p class="text-lg md:text-xl text-gray-300 relative z-10">
+                    Tu ne peux pas améliorer ce que tu ne mesures pas.
+                    Et tu ne convertis pas avec des liens cassés.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Solution Section -->
+    <section id="solution" class="py-12 md:py-20 px-4 bg-white">
+        <div class="container mx-auto max-w-5xl">
+            <div class="text-center mb-10 md:mb-16 animate-fadeInUp">
+                <span class="inline-block bg-pimms-blue-dark text-white text-xs font-bold tracking-widest uppercase px-3 py-1.5 rounded-lg mb-4">
+                    La SOLUTION
+                </span>
+                <h2 class="text-3xl md:text-4xl font-bold text-pimms-blue-text mb-3 leading-tight">
+                    Avec PIMMS, tu convertis plus et tu sais exactement <span class="italic text-pimms-blue-light" style="font-family: 'Georgia', serif;">pourquoi</span>
+                </h2>
+                <p class="text-lg text-gray-700 max-w-xl mx-auto">
+                    Tes liens s’ouvrent directement dans les apps mobiles officielles. Tu réduis la friction, tu suis chaque clic et tu sais enfin ce qui fonctionne vraiment.
+                </p>
+            </div>
+
+            <div class="bg-gray-50 p-6 md:p-10 rounded-xl shadow-lg mb-12 animate-fadeInUp" style="animation-delay: 0.1s;">
+                <div class="grid md:grid-cols-3 gap-6 items-center text-center">
+                    <div class="animate-fadeInUp" style="animation-delay: 0.2s;">
+                        <p class="text-sm font-semibold text-gray-600 mb-1">Votre lien PIMMS</p>
+                        <div class="bg-white p-3 rounded-lg shadow border border-gray-200">
+                            <svg class="h-6 mx-auto mb-1" viewBox="0 0 159 30" preserveAspectRatio="xMidYMid meet"><use href="#svg-2104654643_2197"></use></svg>
+                            <p class="text-xs text-gray-500">pim.ms/lien-court</p>
+                        </div>
+                    </div>
+                    <div class="animate-fadeInUp" style="animation-delay: 0.3s;">
+                        <p class="text-sm font-semibold text-gray-600 mb-1">Clic utilisateur</p>
+                        <img src="https://framerusercontent.com/images/ltlB2eZ8pQuJDUHfwL1OwG8IM.png" alt="Click icon" class="w-12 h-12 mx-auto rounded-full shadow-md">
+                    </div>
+                    <div class="animate-fadeInUp" style="animation-delay: 0.4s;">
+                        <p class="text-sm font-semibold text-gray-600 mb-1">Ouverture directe dans l’app</p>
+                        <div class="flex justify-center items-center space-x-2">
+                            <img src="https://framerusercontent.com/images/UA7NuzhjWjGk56IViBLAMXAwY.png" alt="App icon" class="w-8 h-8">
+                            <img src="https://framerusercontent.com/images/khvKrqoOIoICLsav1WCHHB8sA.png" alt="App icon" class="w-8 h-8">
+                            <img src="https://framerusercontent.com/images/0lXxI95NoCtTV38gPKIA8eR8k.png" alt="App icon" class="w-8 h-8">
+                            <img src="https://framerusercontent.com/images/IFGjOzV3YzwqaRHkyyh7H1ZWsbo.png" alt="App icon" class="w-8 h-8">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+                <div class="bg-white p-6 rounded-xl shadow-md animate-fadeInUp" style="animation-delay: 0.2s;">
+                    <h3 class="text-xl font-semibold text-pimms-blue-text mb-3">Offre une expérience fluide, et sans friction</h3>
+                    <ul class="space-y-2 text-gray-600 text-sm">
+                        <li class="flex items-start"><svg class="w-4 h-4 text-pimms-blue-light mr-2 mt-1 flex-shrink-0" viewBox="0 0 16 17" fill="currentColor"><use href="#svg-1864617005_518"></use></svg>Tes liens s’ouvrent directement dans les apps</li>
+                        <li class="flex items-start"><svg class="w-4 h-4 text-pimms-blue-light mr-2 mt-1 flex-shrink-0" viewBox="0 0 16 17" fill="currentColor"><use href="#svg-1864617005_518"></use></svg>Moins de frictions, plus d’engagement</li>
+                        <li class="flex items-start"><svg class="w-4 h-4 text-pimms-blue-light mr-2 mt-1 flex-shrink-0" viewBox="0 0 16 17" fill="currentColor"><use href="#svg-1864617005_518"></use></svg>Fini les pertes d’utilisateurs en route</li>
+                    </ul>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-md animate-fadeInUp" style="animation-delay: 0.3s;">
+                    <h3 class="text-xl font-semibold text-pimms-blue-text mb-3">Découvre enfin les liens qui génèrent des conversions</h3>
+                    <ul class="space-y-2 text-gray-600 text-sm">
+                        <li class="flex items-start"><svg class="w-4 h-4 text-pimms-blue-light mr-2 mt-1 flex-shrink-0" viewBox="0 0 16 17" fill="currentColor"><use href="#svg-1864617005_518"></use></svg>Visualise l'impact de chaque lien dans ton dashboard</li>
+                        <li class="flex items-start"><svg class="w-4 h-4 text-pimms-blue-light mr-2 mt-1 flex-shrink-0" viewBox="0 0 16 17" fill="currentColor"><use href="#svg-1864617005_518"></use></svg>Relie chaque lien à un résultat concret (achat, inscription…)</li>
+                    </ul>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-md animate-fadeInUp" style="animation-delay: 0.4s;">
+                    <h3 class="text-xl font-semibold text-pimms-blue-text mb-3">Prends de meilleures décisions, plus vite</h3>
+                    <ul class="space-y-2 text-gray-600 text-sm">
+                        <li class="flex items-start"><svg class="w-4 h-4 text-pimms-blue-light mr-2 mt-1 flex-shrink-0" viewBox="0 0 16 17" fill="currentColor"><use href="#svg-1864617005_518"></use></svg>Réalise de l'A/B testing sur tes liens (jusqu'à 4 liens !)</li>
+                        <li class="flex items-start"><svg class="w-4 h-4 text-pimms-blue-light mr-2 mt-1 flex-shrink-0" viewBox="0 0 16 17" fill="currentColor"><use href="#svg-1864617005_518"></use></svg>Données claires et en temps réel</li>
+                        <li class="flex items-start"><svg class="w-4 h-4 text-pimms-blue-light mr-2 mt-1 flex-shrink-0" viewBox="0 0 16 17" fill="currentColor"><use href="#svg-1864617005_518"></use></svg>Tu sais exactement quoi ajuster, accélérer ou arrêter</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="mb-12 animate-fadeInUp" style="animation-delay: 0.5s;">
+                <img src="https://framerusercontent.com/images/6W00mNNoSqnqyKPP2diUE0nrUI.png" alt="PIMMS Dashboard" class="rounded-lg shadow-xl mx-auto">
+            </div>
+
+            <div class="space-y-4 mb-12 animate-fadeInUp" style="animation-delay: 0.6s;">
+                <div class="marquee-container">
+                    <div class="marquee-content">
+                        <!-- Contenu dupliqué pour un effet de défilement plus fluide -->
+                        <div class="flex items-center bg-gray-100 border border-gray-300 rounded-full px-4 py-2 text-sm"><svg class="w-5 h-5 mr-2" viewBox="0 0 30 22"><use href="#svg-55652300_1248"></use></svg><span class="text-gray-700">Pays = France</span></div>
+                        <div class="flex items-center bg-gray-100 border border-gray-300 rounded-full px-4 py-2 text-sm"><svg class="w-5 h-5 mr-2" viewBox="0 0 30 22"><use href="#svg1467293793_1468"></use></svg><span class="text-gray-500 mr-1">Ville =</span> <span class="text-gray-700">Zurich</span></div>
+                        <div class="flex items-center bg-gray-100 border border-gray-300 rounded-full px-4 py-2 text-sm"><svg class="w-5 h-5 mr-2" viewBox="0 0 30 22"><use href="#svg1769310211_4455"></use></svg><span class="text-gray-500 mr-1">Ville =</span> <span class="text-gray-700">New York</span></div>
+                        <div class="flex items-center bg-gray-100 border border-gray-300 rounded-full px-4 py-2 text-sm"><svg class="w-5 h-5 mr-2" viewBox="0 0 30 22"><use href="#svg-55652300_1248"></use></svg><span class="text-gray-700">Pays = France</span></div>
+                        <div class="flex items-center bg-gray-100 border border-gray-300 rounded-full px-4 py-2 text-sm"><svg class="w-5 h-5 mr-2" viewBox="0 0 30 22"><use href="#svg1467293793_1468"></use></svg><span class="text-gray-500 mr-1">Ville =</span> <span class="text-gray-700">Zurich</span></div>
+                        <div class="flex items-center bg-gray-100 border border-gray-300 rounded-full px-4 py-2 text-sm"><svg class="w-5 h-5 mr-2" viewBox="0 0 30 22"><use href="#svg1769310211_4455"></use></svg><span class="text-gray-500 mr-1">Ville =</span> <span class="text-gray-700">New York</span></div>
+                    </div>
+                </div>
+                <div class="marquee-container">
+                     <div class="marquee-content" style="animation-direction: reverse; animation-delay: -15s;"> <!-- Inverse direction and offset -->
+                        <div class="flex items-center bg-gray-100 border border-gray-300 rounded-full pl-2 pr-4 py-1 text-sm"><img src="https://framerusercontent.com/images/2LEGbPsXPHMPiVw0MOyJ1FioY.png" class="w-6 h-6 mr-2 rounded-full"><span class="text-gray-500 mr-1">Referral =</span> <span class="text-gray-700">LinkedIn</span></div>
+                        <div class="flex items-center bg-gray-100 border border-gray-300 rounded-full pl-2 pr-4 py-1 text-sm"><img src="https://framerusercontent.com/images/ftFU4OWs8WldETh45pGeGsGFOAw.png" class="w-6 h-6 mr-2 rounded-full"><span class="text-gray-500 mr-1">Referral =</span> <span class="text-gray-700">Youtube</span></div>
+                        <div class="flex items-center bg-gray-100 border border-gray-300 rounded-full pl-2 pr-4 py-1 text-sm"><img src="https://framerusercontent.com/images/xVJA5lYHPau3uK66rwsHxX3fFc.png" class="w-6 h-6 mr-2 rounded-full"><span class="text-gray-500 mr-1">Referral =</span> <span class="text-gray-700">Tally</span></div>
+                        <div class="flex items-center bg-gray-100 border border-gray-300 rounded-full pl-2 pr-4 py-1 text-sm"><img src="https://framerusercontent.com/images/2LEGbPsXPHMPiVw0MOyJ1FioY.png" class="w-6 h-6 mr-2 rounded-full"><span class="text-gray-500 mr-1">Referral =</span> <span class="text-gray-700">LinkedIn</span></div>
+                        <div class="flex items-center bg-gray-100 border border-gray-300 rounded-full pl-2 pr-4 py-1 text-sm"><img src="https://framerusercontent.com/images/ftFU4OWs8WldETh45pGeGsGFOAw.png" class="w-6 h-6 mr-2 rounded-full"><span class="text-gray-500 mr-1">Referral =</span> <span class="text-gray-700">Youtube</span></div>
+                        <div class="flex items-center bg-gray-100 border border-gray-300 rounded-full pl-2 pr-4 py-1 text-sm"><img src="https://framerusercontent.com/images/xVJA5lYHPau3uK66rwsHxX3fFc.png" class="w-6 h-6 mr-2 rounded-full"><span class="text-gray-500 mr-1">Referral =</span> <span class="text-gray-700">Tally</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-pimms-blue-grey p-8 md:p-10 rounded-2xl shadow-lg text-center animate-fadeInUp" style="animation-delay: 0.7s;">
+                <p class="text-xl md:text-2xl font-semibold text-pimms-blue-text mb-6">
+                    <strong class="text-pimms-blue-dark">PIMMS te montre ce qui marche.</strong><br>
+                    Tu gagnes du temps, des leads et de la clarté.
+                </p>
+                <a href="#" rel="noopener" class="inline-flex items-center bg-pimms-blue-light text-white font-bold text-base md:text-lg px-8 py-3 rounded-full shadow-lg hover:bg-blue-700 transition-colors duration-300 transform hover:scale-105">
+                     <svg class="w-4 h-4 mr-2" viewBox="0 0 13 16" fill="currentColor"><use href="#svg-426800535_523"></use></svg>
+                    Démarrer gratuitement • 10 liens offerts
+                </a>
+                <p class="mt-3 text-sm text-pimms-blue-dark font-medium">Pas de CB requise • Sans engagement</p>
+            </div>
+        </div>
+    </section>
+    
+    <section class="py-12 md:py-20 px-4 bg-white relative overflow-hidden">
+        <div class="absolute inset-0 opacity-5" style="background-image:url(https://framerusercontent.com/images/wGAHOWhVswEtWkOKTJN6s2CW0.svg); background-repeat:repeat; background-size:26px auto;"></div>
+        <div class="container mx-auto max-w-5xl relative z-10">
+            <div class="text-center mb-10 md:mb-16 animate-fadeInUp">
+                <span class="inline-block bg-pimms-blue-dark text-white text-xs font-bold tracking-widest uppercase px-3 py-1.5 rounded-lg mb-4">
+                    Le MIEUX ?
+                </span>
+                <h2 class="text-3xl md:text-4xl font-bold text-pimms-blue-text mb-3 leading-tight">
+                    Ça fonctionne partout,<br class="md:hidden"> et ça <span class="italic text-pimms-blue-light" style="font-family: 'Georgia', serif;">tracke</span> tout
+                </h2>
+                <p class="text-lg text-gray-700 max-w-xl mx-auto">
+                    Où que tu partages un lien, PIMMS s’intègre. <strong class="text-pimms-blue-dark">Fonctionne avec +100 apps mobiles.</strong>
+                </p>
+            </div>
+
+            <div class="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-8 gap-4 md:gap-6 place-items-center mb-12 animate-fadeInUp" style="animation-delay: 0.1s;">
+                <!-- Staggered animation for logos -->
+                <img src="https://framerusercontent.com/images/wgZtgcoJi3LLf0IqSiDJj0LBejY.png" alt="App logo" class="h-10 md:h-12 opacity-80 hover:opacity-100 transition-opacity animate-fadeInUp" style="animation-delay: 0.15s;">
+                <img src="https://framerusercontent.com/images/odHidVcIduFAvImLfbgTV2aPuY.png" alt="App logo" class="h-10 md:h-12 opacity-80 hover:opacity-100 transition-opacity animate-fadeInUp" style="animation-delay: 0.2s;">
+                <img src="https://framerusercontent.com/images/04Z7JYwKPwUepqKdboQPr6ONZnY.png" alt="App logo" class="h-10 md:h-12 opacity-80 hover:opacity-100 transition-opacity animate-fadeInUp" style="animation-delay: 0.25s;">
+                <img src="https://framerusercontent.com/images/VV6nxjnrjP09C6CjoCNO5RzfJHo.png" alt="App logo" class="h-10 md:h-12 opacity-80 hover:opacity-100 transition-opacity animate-fadeInUp" style="animation-delay: 0.3s;">
+                <img src="https://framerusercontent.com/images/GKW9tWgTISJ1s8WizoTKxbgelCk.png" alt="App logo" class="h-10 md:h-12 opacity-80 hover:opacity-100 transition-opacity animate-fadeInUp" style="animation-delay: 0.35s;">
+                <img src="https://framerusercontent.com/images/59nG3AL2k1iw3Do0JqZjgOtWEXg.png" alt="App logo" class="h-10 md:h-12 opacity-80 hover:opacity-100 transition-opacity animate-fadeInUp" style="animation-delay: 0.4s;">
+                <img src="https://framerusercontent.com/images/tAWTv3cyrUyaJe97ExfVrwUQo.png" alt="App logo" class="h-10 md:h-12 opacity-80 hover:opacity-100 transition-opacity animate-fadeInUp" style="animation-delay: 0.45s;">
+                <img src="https://framerusercontent.com/images/G0PT1jSOyBc0cczWPD6hczA3sw.png" alt="App logo" class="h-10 md:h-12 opacity-80 hover:opacity-100 transition-opacity animate-fadeInUp" style="animation-delay: 0.5s;">
+                <img src="https://framerusercontent.com/images/korzMsglT0Qo7LmdIycFLi4AA.png" alt="App logo" class="h-10 md:h-12 opacity-80 hover:opacity-100 transition-opacity animate-fadeInUp" style="animation-delay: 0.55s;">
+                <img src="https://framerusercontent.com/images/XY1MRB104lEWOaaRgupJlSqzlF0.png" alt="App logo" class="h-10 md:h-12 opacity-80 hover:opacity-100 transition-opacity animate-fadeInUp" style="animation-delay: 0.6s;">
+                <img src="https://framerusercontent.com/images/rzd4WsvoNszoIm3bNrIkJbqkzl0.png" alt="App logo" class="h-10 md:h-12 opacity-80 hover:opacity-100 transition-opacity animate-fadeInUp" style="animation-delay: 0.65s;">
+                <img src="https://framerusercontent.com/images/LBTL9jnbuhEmiLlONJQoOmYpIE.png" alt="App logo" class="h-10 md:h-12 opacity-80 hover:opacity-100 transition-opacity animate-fadeInUp" style="animation-delay: 0.7s;">
+            </div>
+
+            <div class="text-center animate-fadeInUp" style="animation-delay: 0.8s;">
+                <a href="#" rel="noopener" class="inline-flex items-center bg-pimms-blue-light text-white font-bold text-base md:text-lg px-8 py-3 rounded-full shadow-lg hover:bg-blue-700 transition-colors duration-300 transform hover:scale-105">
+                    <svg class="w-4 h-4 mr-2" viewBox="0 0 13 16" fill="currentColor"><use href="#svg-426800535_523"></use></svg>
+                    Démarrer gratuitement • 10 liens offerts
+                </a>
+                <p class="mt-3 text-sm text-pimms-blue-dark font-medium">Pas de CB requise • Sans engagement</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="temoignages" class="py-12 md:py-20 px-4 bg-pimms-blue-grey">
+        <div class="container mx-auto max-w-5xl">
+            <div class="text-center mb-10 md:mb-16 animate-fadeInUp">
+                <span class="inline-block bg-pimms-blue-dark text-white text-xs font-bold tracking-widest uppercase px-3 py-1.5 rounded-lg mb-4">
+                    ILS APPROUVENT
+                </span>
+                <h2 class="text-3xl md:text-4xl font-bold text-pimms-blue-text mb-3 leading-tight">
+                    Ce que ça change <span class="italic text-pimms-blue-light" style="font-family: 'Georgia', serif;">concrètement</span>
+                </h2>
+                <p class="text-lg text-gray-700 max-w-xl mx-auto">
+                    Ils en avaient marre de perdre des conversions. Comme toi.
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="bg-white p-6 md:p-8 rounded-xl shadow-lg animate-fadeInUp" style="animation-delay: 0.1s;">
+                    <svg class="w-12 h-auto text-gray-200 mb-4" viewBox="0 0 455 23"><use href="#svg1570421689_5816"></use></svg> 
+                    <blockquote class="text-lg md:text-xl text-pimms-blue-text italic mb-6">
+                        <p>"J'en avais assez que mes liens sur les réseaux ouvrent le navigateur interne des apps... Puis j'ai découvert PIMMS! C'est le meilleur moyen d'améliorer sa conversion. Tout cela grâce au deeplink."</p>
+                    </blockquote>
+                    <div class="flex items-center">
+                        <img src="https://framerusercontent.com/images/KklZVMXutUV2WtxOShgWwVLwPU.png" alt="Mathieu Dacheux" class="w-12 h-12 rounded-full mr-4 object-cover">
+                        <div>
+                            <p class="font-semibold text-pimms-blue-dark">Mathieu Dacheux</p>
+                            <p class="text-sm text-gray-600">Développeur et créateur de SaaS</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white p-6 md:p-8 rounded-xl shadow-lg animate-fadeInUp" style="animation-delay: 0.2s;">
+                     <svg class="w-12 h-auto text-gray-200 mb-4" viewBox="0 0 455 23"><use href="#svg-1265916528_5816"></use></svg>
+                    <blockquote class="text-lg md:text-xl text-pimms-blue-text italic mb-6">
+                        <p>"Jusque-là j’utilisais Taap.it mais je n’étais pas satisfait des analytics ni du tarif proposé. En me baladant sur LinkedIn, j’ai découvert PIMMS et depuis je ne peux plus m’en passer. Je l’utilise maintenant pour suivre tous mes contenus LinkedIn et campagnes clients."</p>
+                    </blockquote>
+                    <div class="flex items-center">
+                        <img src="https://framerusercontent.com/images/4yj4N0cw57jKkZopxl8OFlNIw.png" alt="Mathieu Visière" class="w-12 h-12 rounded-full mr-4 object-cover">
+                        <div>
+                            <p class="font-semibold text-pimms-blue-dark">Mathieu Visière</p>
+                            <p class="text-sm text-gray-600">Webdesigner, Founder @Pixel Pop!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="tarif" class="py-12 md:py-20 px-4 bg-white">
+        <div class="container mx-auto max-w-5xl">
+            <div class="text-center mb-10 md:mb-16 animate-fadeInUp">
+                <span class="inline-block bg-pimms-blue-dark text-white text-xs font-bold tracking-widest uppercase px-3 py-1.5 rounded-lg mb-4">
+                    LES OFFRES PIMMS
+                </span>
+                <h2 class="text-3xl md:text-4xl font-bold text-pimms-blue-text mb-3 leading-tight">
+                    Prends une longueur d’avance sur tes <span class="italic text-pimms-blue-light" style="font-family: 'Georgia', serif;">concurrents</span>
+                </h2>
+                <p class="text-lg text-gray-700 max-w-xl mx-auto">
+                    Commence gratuitement, ou passe à la version Pro avant que le tarif de lancement ne disparaisse.
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8 items-stretch mb-8">
+                <div class="border border-gray-200 bg-white p-6 md:p-8 rounded-xl shadow-lg flex flex-col animate-fadeInUp" style="animation-delay: 0.1s;">
+                    <div class="mb-6 text-center md:text-left">
+                        <svg class="h-6 md:h-7 mb-2 inline-block" viewBox="0 0 159 30"><use href="#svg-2104654643_2197"></use></svg>
+                        <h3 class="text-3xl font-semibold text-pimms-blue-light ml-2 inline-block align-bottom">Starter</h3>
+                    </div>
+                    <p class="text-gray-600 mb-6 text-sm">Commence gratuitement avec 10 deeplinks et teste la puissance des redirections mobiles.</p>
+                    <div class="mb-6">
+                        <span class="text-5xl font-bold text-pimms-blue-dark">0€</span>
+                        <span class="text-gray-500">/ Gratuit à vie</span>
+                    </div>
+                    <ul class="space-y-2 text-gray-700 text-sm mb-8 flex-grow">
+                        <li class="flex items-center"><svg class="w-4 h-4 text-pimms-blue-light mr-2" viewBox="0 0 16 17" fill="currentColor"><use href="#svg-748545027_546"></use></svg>10 deeplinks</li>
+                        <li class="flex items-center"><svg class="w-4 h-4 text-pimms-blue-light mr-2" viewBox="0 0 16 17" fill="currentColor"><use href="#svg-748545027_546"></use></svg>Redirection mobile (apps)</li>
+                        <li class="flex items-center"><svg class="w-4 h-4 text-pimms-blue-light mr-2" viewBox="0 0 16 17" fill="currentColor"><use href="#svg-748545027_546"></use></svg>QR codes + liens UTM</li>
+                        <li class="flex items-center"><svg class="w-4 h-4 text-pimms-blue-light mr-2" viewBox="0 0 16 17" fill="currentColor"><use href="#svg-748545027_546"></use></svg>Suivi des clics</li>
+                        <li class="flex items-center text-gray-400 line-through"><svg class="w-4 h-4 text-gray-400 mr-2" viewBox="0 0 16 17" fill="currentColor"><use href="#svg1306115868_735"></use></svg>Suivi des conversions</li>
+                        <li class="flex items-center"><svg class="w-4 h-4 text-pimms-blue-light mr-2" viewBox="0 0 16 17" fill="currentColor"><use href="#svg-748545027_546"></use></svg>Données conservées 30 jours</li>
+                        <li class="flex items-center text-gray-400 line-through"><svg class="w-4 h-4 text-gray-400 mr-2" viewBox="0 0 16 17" fill="currentColor"><use href="#svg1306115868_735"></use></svg>Travail en équipe</li>
+                        <li class="flex items-center"><svg class="w-4 h-4 text-pimms-blue-light mr-2" viewBox="0 0 16 17" fill="currentColor"><use href="#svg-748545027_546"></use></svg>1 domaine personnalisé</li>
+                    </ul>
+                    <a href="#" rel="noopener" class="block w-full text-center bg-white text-pimms-blue-light font-bold py-3 px-6 rounded-full border-2 border-pimms-blue-light hover:bg-pimms-blue-light hover:text-white transition-colors duration-300 transform hover:scale-105">
+                        Démarrer gratuitement
+                    </a>
+                    <p class="text-xs text-center text-pimms-blue-dark mt-2">Pas de CB requise • Sans engagement</p>
+                </div>
+
+                <div class="border-2 border-pimms-blue-light bg-white p-6 md:p-8 rounded-xl shadow-2xl flex flex-col relative animate-fadeInUp" style="animation-delay: 0.2s;">
+                    <div class="absolute top-4 right-4 bg-yellow-400 text-yellow-800 text-xs font-bold px-3 py-1 rounded-full transform -rotate-6 animate-fadeInUp" style="animation-delay: 0.3s;">Populaire 🔥</div>
+                    <div class="mb-6 text-center md:text-left">
+                         <svg class="h-6 md:h-7 mb-2 inline-block" viewBox="0 0 159 30"><use href="#svg-2104654643_2197"></use></svg>
+                        <h3 class="text-3xl font-semibold text-pimms-blue-light ml-2 inline-block align-bottom">Pro</h3>
+                    </div>
+                    <p class="text-gray-600 mb-6 text-sm">Profite de deeplinks illimités avec suivi des clics et conversions, à vie et sans abonnement.</p>
+                    <div class="mb-6">
+                        <span class="text-5xl font-bold text-pimms-blue-dark">45€</span>
+                        <span class="text-gray-500">HT / Paiement unique</span>
+                    </div>
+                    <ul class="space-y-2 text-gray-700 text-sm mb-8 flex-grow">
+                        <li class="flex items-center font-semibold"><svg class="w-4 h-4 text-pimms-blue-light mr-2" viewBox="0 0 16 17" fill="currentColor"><use href="#svg-748545027_546"></use></svg>Deeplinks Illimités</li>
+                        <li class="flex items-center"><svg class="w-4 h-4 text-pimms-blue-light mr-2" viewBox="0 0 16 17" fill="currentColor"><use href="#svg-748545027_546"></use></svg>Redirection mobile (apps)</li>
+                        <li class="flex items-center"><svg class="w-4 h-4 text-pimms-blue-light mr-2" viewBox="0 0 16 17" fill="currentColor"><use href="#svg-748545027_546"></use></svg>QR codes + liens UTM</li>
+                        <li class="flex items-center"><svg class="w-4 h-4 text-pimms-blue-light mr-2" viewBox="0 0 16 17" fill="currentColor"><use href="#svg-748545027_546"></use></svg>Suivi des clics</li>
+                        <li class="flex items-center font-semibold"><svg class="w-4 h-4 text-pimms-blue-light mr-2" viewBox="0 0 16 17" fill="currentColor"><use href="#svg-748545027_546"></use></svg>Suivi de conversions Illimité</li>
+                        <li class="flex items-center font-semibold"><svg class="w-4 h-4 text-pimms-blue-light mr-2" viewBox="0 0 16 17" fill="currentColor"><use href="#svg-748545027_546"></use></svg>Données conservées 1 an</li>
+                        <li class="flex items-center font-semibold"><svg class="w-4 h-4 text-pimms-blue-light mr-2" viewBox="0 0 16 17" fill="currentColor"><use href="#svg-748545027_546"></use></svg>Jusqu'à 3 collaborateurs</li>
+                        <li class="flex items-center font-semibold"><svg class="w-4 h-4 text-pimms-blue-light mr-2" viewBox="0 0 16 17" fill="currentColor"><use href="#svg-748545027_546"></use></svg>10 domaines personnalisés</li>
+                    </ul>
+                    <a href="#" rel="noopener" class="block w-full text-center bg-pimms-blue-light text-white font-bold py-3 px-6 rounded-full shadow-lg hover:bg-blue-700 transition-colors duration-300 transform hover:scale-105">
+                        Débloquer mon accès à vie
+                    </a>
+                    <p class="text-xs text-center text-pimms-blue-dark mt-2">Paiement unique • Offre à durée très limitée</p>
+                </div>
+            </div>
+            <p class="text-center text-sm text-gray-600 animate-fadeInUp" style="animation-delay: 0.3s;">
+                <strong class="text-pimms-blue-dark">L’offre à vie disparaîtra après les 100 premiers inscrits.</strong><br>
+                Une fois fermé, ce plan ne reviendra pas.
+            </p>
+        </div>
+    </section>
+
+    <section id="faq" class="py-12 md:py-20 px-4 bg-pimms-blue-grey relative overflow-hidden">
+         <div class="absolute inset-0 opacity-5" style="background-image:url(https://framerusercontent.com/images/wGAHOWhVswEtWkOKTJN6s2CW0.svg); background-repeat:repeat; background-size:26px auto;"></div>
+        <div class="container mx-auto max-w-3xl relative z-10">
+            <div class="text-center mb-10 md:mb-16 animate-fadeInUp">
+                <span class="inline-block bg-pimms-blue-dark text-white text-xs font-bold tracking-widest uppercase px-3 py-1.5 rounded-lg mb-4">
+                    FAQ
+                </span>
+                <h2 class="text-3xl md:text-4xl font-bold text-pimms-blue-text mb-3 leading-tight">
+                    Les réponses à tes <span class="italic text-pimms-blue-light" style="font-family: 'Georgia', serif;">questions</span>
+                </h2>
+                <p class="text-lg text-gray-700 max-w-xl mx-auto">
+                    Tu hésites encore ? Voici ce qu’on nous demande le plus souvent avant de démarrer.
+                </p>
+            </div>
+
+            <div class="space-y-4">
+                <div class="faq-item bg-white p-5 rounded-lg shadow-md animate-fadeInUp" style="animation-delay: 0.1s;">
+                    <details>
+                        <summary class="flex justify-between items-center text-pimms-blue-dark">
+                            Est-ce que je dois installer quelque chose ?
+                            <svg class="w-5 h-5 text-pimms-blue-dark transition-transform duration-200" viewBox="0 0 32 33" fill="currentColor"><use href="#svg-1029048727_716"></use></svg>
+                        </summary>
+                        <p class="mt-3 text-gray-600 text-sm">Non. PIMMS est une plateforme 100% en ligne, rien à télécharger ni à intégrer.</p>
+                    </details>
+                </div>
+                <div class="faq-item bg-white p-5 rounded-lg shadow-md animate-fadeInUp" style="animation-delay: 0.2s;">
+                    <details>
+                        <summary class="flex justify-between items-center text-pimms-blue-dark">
+                           Ça fonctionne avec tous les réseaux et outils ?
+                            <svg class="w-5 h-5 text-pimms-blue-dark transition-transform duration-200" viewBox="0 0 32 33" fill="currentColor"><use href="#svg-1029048727_716"></use></svg>
+                        </summary>
+                        <p class="mt-3 text-gray-600 text-sm">Oui ! PIMMS fonctionne avec plus de 100 applications mobiles populaires, y compris tous les grands réseaux sociaux (Instagram, TikTok, LinkedIn, YouTube, Facebook, X, etc.), les plateformes e-commerce (Amazon, Etsy), les outils de productivité, et bien plus. Si l'app de destination supporte les deeplinks (liens profonds), PIMMS peut la gérer.</p>
+                    </details>
+                </div>
+                 <div class="faq-item bg-white p-5 rounded-lg shadow-md animate-fadeInUp" style="animation-delay: 0.3s;">
+                    <details>
+                        <summary class="flex justify-between items-center text-pimms-blue-dark">
+                           Est-ce que je peux suivre les conversions ?
+                            <svg class="w-5 h-5 text-pimms-blue-dark transition-transform duration-200" viewBox="0 0 32 33" fill="currentColor"><use href="#svg-1029048727_716"></use></svg>
+                        </summary>
+                        <p class="mt-3 text-gray-600 text-sm">Absolument. Avec le plan Pro, vous pouvez tracker non seulement les clics, mais aussi les conversions réelles (ventes, inscriptions, etc.) en plaçant un simple pixel de suivi sur votre page de destination ou de remerciement.</p>
+                    </details>
+                </div>
+                <div class="faq-item bg-white p-5 rounded-lg shadow-md animate-fadeInUp" style="animation-delay: 0.4s;">
+                    <details>
+                        <summary class="flex justify-between items-center text-pimms-blue-dark">
+                           Est-ce que l'offre à vie va vraiment disparaître ?
+                            <svg class="w-5 h-5 text-pimms-blue-dark transition-transform duration-200" viewBox="0 0 32 33" fill="currentColor"><use href="#svg-1029048727_716"></use></svg>
+                        </summary>
+                        <p class="mt-3 text-gray-600 text-sm">Oui. Cette offre exceptionnelle est limitée aux 100 premiers utilisateurs Pro. Une fois ce quota atteint, elle sera remplacée par un abonnement mensuel ou annuel. C'est une opportunité unique d'accéder à toutes les fonctionnalités Pro à vie pour un paiement unique.</p>
+                    </details>
+                </div>
+                 <div class="faq-item bg-white p-5 rounded-lg shadow-md animate-fadeInUp" style="animation-delay: 0.5s;">
+                    <details>
+                        <summary class="flex justify-between items-center text-pimms-blue-dark">
+                           Est-ce que c’est sécurisé ?
+                            <svg class="w-5 h-5 text-pimms-blue-dark transition-transform duration-200" viewBox="0 0 32 33" fill="currentColor"><use href="#svg-1029048727_716"></use></svg>
+                        </summary>
+                        <p class="mt-3 text-gray-600 text-sm">La sécurité de vos données est notre priorité. PIMMS utilise des protocoles de sécurité standards (HTTPS, chiffrement) et nous ne stockons aucune information sensible personnelle de vos utilisateurs finaux. Vos données d'analyse vous appartiennent.</p>
+                    </details>
+                </div>
+                 <div class="faq-item bg-white p-5 rounded-lg shadow-md animate-fadeInUp" style="animation-delay: 0.6s;">
+                    <details>
+                        <summary class="flex justify-between items-center text-pimms-blue-dark">
+                           Et si je ne suis pas dev ?
+                            <svg class="w-5 h-5 text-pimms-blue-dark transition-transform duration-200" viewBox="0 0 32 33" fill="currentColor"><use href="#svg-1029048727_716"></use></svg>
+                        </summary>
+                        <p class="mt-3 text-gray-600 text-sm">Aucun problème ! PIMMS est conçu pour être utilisé par tous, marketeurs, créateurs de contenu, entrepreneurs... L'interface est intuitive et vous n'avez besoin d'aucune compétence technique pour créer et gérer vos deeplinks.</p>
+                    </details>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="final-cta" class="py-16 md:py-24 px-4 bg-pimms-blue-dark text-white relative overflow-hidden">
+        <div class="absolute inset-0 opacity-5" style="background-image:url(https://framerusercontent.com/images/wGAHOWhVswEtWkOKTJN6s2CW0.svg); background-repeat:repeat; background-size:26px auto;"></div>
+        <div class="container mx-auto max-w-3xl text-center relative z-10">
+            <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 animate-fadeInUp">
+                Ne perds plus une seule <span class="italic text-pimms-blue-light" style="font-family: 'Georgia', serif;">conversion</span>
+            </h2>
+            <p class="text-lg md:text-xl text-gray-300 mb-8 md:mb-10 max-w-2xl mx-auto animate-fadeInUp" style="animation-delay: 0.1s;">
+                Teste PIMMS gratuitement et découvre comment rediriger mieux, convertir plus et suivre enfin ce qui marche vraiment.
+            </p>
+            <div class="animate-fadeInUp" style="animation-delay: 0.2s;">
+                <a href="#" rel="noopener" class="inline-flex items-center bg-pimms-blue-light text-white font-bold text-base md:text-lg px-8 py-4 rounded-full shadow-lg hover:bg-blue-700 transition-colors duration-300 transform hover:scale-105">
+                    <svg class="w-5 h-5 mr-2" viewBox="0 0 13 16" fill="currentColor"><use href="#svg-426800535_523"></use></svg>
+                    Démarrer gratuitement • 10 liens offerts
+                </a>
+                <p class="mt-4 text-sm text-gray-400">Pas de CB, pas de prise de tête, juste + de conversions.</p>
+            </div>
+        </div>
+    </section>
+
+    <footer class="py-12 md:py-16 px-4 bg-white text-pimms-blue-dark">
+        <div class="container mx-auto max-w-6xl">
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
+                <div class="mb-6 md:mb-0 animate-fadeInUp">
+                    <svg class="h-8 mb-3" viewBox="0 0 159 30" preserveAspectRatio="xMidYMid meet"><use href="#svg-2104654643_2197"></use></svg>
+                    <h1>PIMMS.</h1>
+                    <p class="text-sm text-gray-600 mb-4">PIMMS est la plateforme de deeplink pour optimiser vos conversions sur mobile.</p>
+                    <p class="text-sm font-semibold mb-2">© 2025 PIMMS</p>
+                    <div class="flex space-x-3">
+                        <a href="#" target="_blank" rel="noopener" class="text-gray-500 hover:text-pimms-blue-light transition-co</a>lors">
+                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 0C4.477 0 0 4.477 0 10c0 4.418 2.865 8.165 6.839 9.489.5.092.682-.217.682-.483 0-.237-.009-.868-.013-1.703-2.782.602-3.369-1.34-3.369-1.34-.455-1.158-1.11-1.468-1.11-1.468-.908-.62.069-.608.069-.608 1.003.074 1.532 1.029 1.532 1.029.891 1.529 2.341 1.089 2.91.833.091-.647.349-1.086.635-1.338-2.22-.251-4.555-1.107-4.555-4.943 0-1.091.39-1.984 1.03-2.682-.103-.253-.446-1.27.098-2.656 0 0 .84-.269 2.75 1.025A9.549 9.549 0 0110 5.416c.85.004 1.705.114 2.504.336 1.909-1.294 2.748-1.025 2.748-1.025.546 1.386.202 2.403.1 2.656.64.698 1.026 1.59 1.026 2.682 0 3.847-2.337 4.687-4.565 4.935.358.307.678.917.678 1.85 0 1.338-.012 2.419-.012 2.746 0 .268.18.58.688.482A10.001 10.001 0 0020 10c0-5.523-4.477-10-10-10z" clip-rule="evenodd"></path></svg>
+                        </a>
+                        <a href="#" target="_blank" rel="noopener" class="text-gray-500 hover:text-pimms-blue-light transit</a>ion-colors">
+                           <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 18 19"><g transform="translate(0 0.805)"><path d="M17 0H1C.735 0 .48.105.293.293A1.003 1.003 0 000 1v16c0 .265.105.52.293.707.187.188.442.293.707.293h16c.265 0 .52-.105.707-.293.188-.187.293-.442.293-.707V1c0-.265-.105-.52-.293-.707A1.003 1.003 0 0017 0zM5.339 15.337H2.667V6.747h2.672v8.59zM4.003 5.574a1.55 1.55 0 01-1.548-1.548c0-.411.163-.804.454-1.095.29-.29.683-.453 1.094-.453s.804.163 1.095.453c.29.29.453.684.453 1.095a1.55 1.55 0 01-1.548 1.548zM15.338 15.337h-2.669v-4.177c0-.996-.018-2.277-1.388-2.277-1.398 0-1.607 1.086-1.607 2.207v4.247H7.013V6.748h2.56v1.174h.037c.355-.675 1.227-1.387 2.524-1.387 2.704 0 3.202 1.778 3.202 4.092v4.71z"></path></g></svg>
+                        </a>
+                        <a href="#" target="_blank" rel="noopener" class="text-gray-500 hover:text-pimms-blue-light t</a>ransition-colors">
+                           <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 19"><g transform="translate(.997 .786)"><path d="M17.95 5.324c-.01-.757-.152-1.507-.419-2.216-.232-.6-.586-1.143-1.039-1.596s-1.044-.846-1.642-1.078c-.7-.263-1.439-.405-2.186-.42C11.75.012 11.445 0 9.003 0S6.248 0 5.293.055c-.747.015-1.486.157-2.186.42C2.51.707 1.967 1.061 1.514 1.514c-.454.453-.807.996-1.039 1.596C.212 3.807.07 4.546.056 5.293.013 6.256 0 6.561 0 9.003s0 6.203.056 7.159c.015.748.156 1.486.419 2.187.232.598.585 1.141 1.039 1.594s1.044.846 1.642 1.077c.7.273 1.439.425 2.187.45 1.047.043 1.321.056 3.763.056s2.717 0 3.763-.056c.748-.015 1.487-.156 2.187-.419.598-.232 1.14-.586 1.594-1.039.453-.453.807-.996 1.039-1.594.263-.7.404-1.439.419-2.187.043-1.047.056-1.321.056-3.763s0-2.717-.056-3.763zm-9 8.297C6.443 13.621 4.374 11.552 4.374 9s2.069-4.621 4.623-4.621C11.552 4.379 13.62 6.448 13.62 9s-2.068 4.621-4.623 4.621zM13.804 5.282c-.595 0-1.078-.482-1.078-1.078s.483-1.078 1.078-1.078c.596 0 1.078.482 1.078 1.078s-.482 1.078-1.078 1.078z"></path><path d="M8.997 12c1.659 0 3.003-1.344 3.003-3.003S10.656 5.994 8.997 5.994C7.338 5.994 5.994 7.339 5.994 8.997s1.344 3.003 3.003 3.003z"></path></g></svg>
+                        </a>
+                    </div>
+                     <a href="#" target="_blank" rel="noopener" class="inline-flex items-center mt-4 text-xs text-gray-500 hover:text-pimms-blue-light transition-colors">
+                        <span class="mr-1">Réalisé par</span>
+                        <span class="font-bold">Guy-Mosley</span>
+                    </a>
+                </div>
+                <div class="animate-fadeInUp" style="animation-delay: 0.1s;">
+                    <h4 class="font-semibold text-lg mb-3">Solutions</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#" class="text-gray-600 hover:text-pimms-blue-light transition-colors">Deeplink LinkedIn pour convertir plus</a></li>
+                        <li><a href="#" class="text-gray-600 hover:text-pimms-blue-light transition-colors">Deeplink YouTube pour plus d'abonnés</a></li>
+                        <li>
+                            <a href="https://zapier.com/apps/pimms/integrations" target="_blank" rel="noopener" class="inline-block mt-2">
+                                <img src="https://framerusercontent.com/images/q3Heb0A08p1vOOq7qSUSTLZJ30.png" alt="Zapier Integration" class="h-8 hover:opacity-80 transition-opacity">
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://marketplace.stripe.com/apps/pimms" target="_blank" rel="noopener" class="inline-block mt-1">
+                                 <svg class="h-5 hover:opacity-80 transition-opacity" viewBox="0 0 190 18"><use href="#svg-683999507_3663"></use></svg>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="animate-fadeInUp" style="animation-delay: 0.2s;">
+                    <h4 class="font-semibold text-lg mb-3">Ressources</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#" class="text-gray-600 hover:text-pimms-blue-light transition-colors">Blog</a></li>
+                        <li><a href="https://pim.ms/api" target="_blank" rel="noopener" class="text-gray-600 hover:text-pimms-blue-light transition-colors">Documentation API</a></li>
+                        <li><a href="https://www.npmjs.com/package/pimms?pimms_id=K49YW5bhSdDn3sur" target="_blank" rel="noopener" class="text-gray-600 hover:text-pimms-blue-light transition-colors">SDK TypeScript</a></li>
+                    </ul>
+                </div>
+                <div class="animate-fadeInUp" style="animation-delay: 0.3s;">
+                    <h4 class="font-semibold text-lg mb-3">Légal</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="https://pimms.io/fr/legal/conditions-dutilisation" target="_blank" rel="noopener" class="text-gray-600 hover:text-pimms-blue-light transition-colors">Conditions d'utilisation</a></li>
+                        <li><a href="https://pimms.io/fr/legal/mentions-legales" target="_blank" rel="noopener" class="text-gray-600 hover:text-pimms-blue-light transition-colors">Mentions légales</a></li>
+                        <li><a href="https://pimms.io/fr/legal/politique-de-confidentialite" target="_blank" rel="noopener" class="text-gray-600 hover:text-pimms-blue-light transition-colors">Politique de confidentialité</a></li>
+                        <li><a href="https://pimms.io/fr/legal/signaler-un-abus" target="_blank" rel="noopener" class="text-gray-600 hover:text-pimms-blue-light transition-colors">Signaler un abus</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </footer>
+    </body>
+    <script src="https://framerusercontent.com/scripts/3.0.0/framer.js"></script>
+    </html>
